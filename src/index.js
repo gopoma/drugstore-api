@@ -2,8 +2,10 @@ const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
 const {port} = require("./config");
+const {doDBConnection} = require("./libs/db");
 
 const app = express();
+doDBConnection();
 
 // Utilizando middleware
 app.use(morgan("dev"));
