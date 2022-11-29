@@ -7,6 +7,9 @@ const {doDBConnection} = require("./libs/db");
 const app = express();
 doDBConnection();
 
+// Importando routers
+const users = require("./routes/users");
+
 // Utilizando middleware
 app.use(morgan("dev"));
 app.use(express.json());
@@ -26,6 +29,9 @@ app.get("/", (req, res) => {
         ]
     });
 });
+
+// Utilizando las rutas
+users(app);
 
 app.listen(port, () => {
     // eslint-disable-next-line
