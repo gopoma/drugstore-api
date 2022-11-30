@@ -1,4 +1,5 @@
 const {mongoose} = require("../libs/db");
+const uniqueValidator = require("mongoose-unique-validator");
 
 const userSchema = mongoose.Schema({
     firstName: {
@@ -18,7 +19,7 @@ const userSchema = mongoose.Schema({
         type: String,
         trim: true,
         required: [true, "Por favor, proporcione un correo electrónico"],
-        unique: [true, "Correo electrónico ya registrado"],
+        unique: true,
         match: [/^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/, "Correo electrónico inválido"]
     },
     password: {
@@ -59,6 +60,7 @@ const userSchema = mongoose.Schema({
         github: String
     }
 });
+userSchema.plugin(uniqueValidator, {message:"{VALUE} ya ha sido registrado"});
 
 const UserModel = mongoose.model("user", userSchema);
 

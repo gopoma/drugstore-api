@@ -49,6 +49,11 @@ app.use((err, req, res, next) => {
             success: false,
             messages: ["Límite de Tamaño de Imagen Excedido (4MB)"]
         });
+    } else {
+        return res.status(500).json({
+            success: false,
+            messages: ["A wild Error has appeared!"]
+        });
     }
 });
 

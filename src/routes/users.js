@@ -1,5 +1,4 @@
 const {Router} = require("express");
-const upload = require("../middleware/upload");
 const UserService = require("../services/users");
 
 function users(app) {
@@ -8,8 +7,8 @@ function users(app) {
 
     app.use("/api/users", router);
 
-    router.post("/", upload.single("img"), async (req, res) => {
-        const result = await userService.create(req.body, req.file);
+    router.post("/", async (req, res) => {
+        const result = await userService.create(req.body);
         return res.status(201).json(result);
     });
 }
