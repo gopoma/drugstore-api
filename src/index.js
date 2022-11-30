@@ -33,6 +33,25 @@ app.get("/", (req, res) => {
 // Utilizando las rutas
 users(app);
 
+app.use((err, req, res, next) => {
+    if(err.code === "LIMIT_UNEXPECTED_FILE") {
+        return res.status(400).json({
+            success: false,
+            messages: ["Envío de Imagen inválido"]
+        });
+    } else if(err.code === "INVALID_FILE_FORMAT") {
+        return res.status(400).json({
+            success: false,
+            messages: [err.message]
+        });
+    } else if(err.code === "LIMIT_FILE_SIZE") {
+        return res.status(400).json({
+            success: false,
+            messages: ["Límite de Tamaño de Imagen Excedido (4MB)"]
+        });
+    }
+});
+
 app.listen(port, () => {
     // eslint-disable-next-line
     console.log(`http://localhost:${port}`);
