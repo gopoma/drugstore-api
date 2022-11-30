@@ -33,7 +33,6 @@ const userSchema = mongoose.Schema({
     },
     role: {
         type: String,
-        required: [true, "Por favor, proporcione un rol"],
         enum: {
             values: ["REGULAR", "ADMIN"],
             message: "Introduzca un rol válido"

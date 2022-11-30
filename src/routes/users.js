@@ -9,10 +9,8 @@ function users(app) {
     app.use("/api/users", router);
 
     router.post("/", upload.single("img"), async (req, res) => {
-        console.log(req.file);
-        return res.json({ok:true});
-        // const result = await userService.create(req.body);
-        // return res.status(201).json(result);
+        const result = await userService.create(req.body, req.file);
+        return res.status(201).json(result);
     });
 }
 
