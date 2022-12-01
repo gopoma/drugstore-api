@@ -1,6 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
+const cookies = require("cookie-parser");
 const {port} = require("./config");
 const {doDBConnection} = require("./libs/db");
 
@@ -9,10 +10,12 @@ doDBConnection();
 
 // Importando routers
 const users = require("./routes/users");
+const auth = require("./routes/auth");
 
 // Utilizando middleware
 app.use(morgan("dev"));
 app.use(express.json());
+app.use(cookies());
 app.use(cors({
     origin: ["http://localhost:4200"],
     credentials: true
@@ -32,6 +35,7 @@ app.get("/", (req, res) => {
 
 // Utilizando las rutas
 users(app);
+auth(app);
 
 app.use((err, req, res, next) => {
     if(err.code === "LIMIT_UNEXPECTED_FILE") {
