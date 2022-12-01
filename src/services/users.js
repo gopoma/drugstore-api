@@ -18,8 +18,15 @@ class UserService {
         return normalizedUser;
     }
 
-    async create(data) {
+    async create(data, trusted=false) {
         try {
+            if(!trusted) {
+                delete data.role;
+                delete data.isEmailValid;
+                delete data.emailValidationUUID;
+                delete data.provider;
+                delete data.idProvider;
+            }
             if(!data.displayName?.trim()) {
                 data.displayName = `${data.firstName} ${data.lastName}`;
             }

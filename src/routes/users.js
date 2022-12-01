@@ -8,7 +8,7 @@ function users(app) {
     app.use("/api/users", router);
 
     router.post("/", async (req, res) => {
-        const result = await userService.create(req.body);
+        const result = await userService.create(req.body, true);
         return res.status(201).json(result);
     });
 }
