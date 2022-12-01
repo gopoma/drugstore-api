@@ -1,5 +1,6 @@
 const {Router} = require("express");
 const AuthService = require("../services/auth");
+const {authResponse} = require("../helpers/authResponse");
 
 function auth(app) {
     const router = Router();
@@ -9,7 +10,7 @@ function auth(app) {
 
     router.post("/signup", async (req, res) => {
         const result = await authService.signup(req.body);
-        return res.json(result);
+        return authResponse(res, result, 400);
     });
 }
 
