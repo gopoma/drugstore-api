@@ -8,7 +8,11 @@ async function encrypt(str) {
 }
 
 async function compare(str, hash) {
-    return bcrypt.compare(str, hash);
+    try {
+        return await bcrypt.compare(str, hash);
+    } catch(error) {
+        return false;
+    }
 }
 
 module.exports = {

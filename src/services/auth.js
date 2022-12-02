@@ -3,8 +3,45 @@ const uuid = require("uuid");
 const transporter = require("../libs/email");
 const jwt = require("jsonwebtoken");
 const {jwtSecret} = require("../config");
+const {compare} = require("../libs/encryption");
 
 class AuthService {
+    async login(data) {
+        const {email, password} = data;
+        const messages = [];
+        if(!email) {
+            messages.push("Por favor, proporcione un Correo Electrónico");
+        }
+        if(!password) {
+            messages.push("Por favor, proporcione una Contraseña");
+        }
+        if(!email || !password) {
+            return {
+                success: false,
+                messages
+            };
+        }
+
+        const userService = new UserService();
+        const user = await userService.getByEmail(email);
+
+        const ok = await compare(password, user?.password);
+        if(!user || !ok) {
+            return {
+                success: false,
+                messages: ["Las credenciales son incorrectas"]
+            };
+        }
+
+        if(!user.isEmailValid) {
+            return {
+                success: false,
+                messages: ["Termine de crear su cuenta validando su Correo Electrónico"]
+            };
+        }
+        return this.#getUserData(user);
+    }
+
     async signup(data) {
         data.provider = {local:true};
         data.emailValidationUUID = uuid.v4();

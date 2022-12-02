@@ -3,6 +3,11 @@ const {encrypt} = require("../libs/encryption");
 const dbError = require("../helpers/dbError");
 
 class UserService {
+    async getByEmail(email) {
+        const user = await UserModel.findOne({email});
+        return user;
+    }
+
     #getNormalizedUser(user) {
         const normalizedUser = {
             id: user.id,

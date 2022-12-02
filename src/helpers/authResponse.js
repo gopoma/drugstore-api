@@ -21,7 +21,7 @@ function tokenToCookieAndRedirect(res, result, errCode) {
 
         return res.cookie("token", token, {
             httpOnly: true,
-            secure: production,
+            secure: false,
             sameSite: "none",
             expires: new Date(new Date().setDate(new Date().getDate() + 7))
         }).redirect(production ? "https://your-production-angular-url" : "https://your-development-angular-url");
