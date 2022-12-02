@@ -10,7 +10,7 @@ function auth(app) {
 
     router.post("/signup", async (req, res) => {
         const result = await authService.signup(req.body);
-        return authResponse(res, result, 400);
+        return res.status(result.success ? 201 : 400).json(result);
     });
 }
 

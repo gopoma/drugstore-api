@@ -1,8 +1,29 @@
 const UserService = require("./users");
+const uuid = require("uuid");
 const jwt = require("jsonwebtoken");
 const {jwtSecret} = require("../config");
 
 class AuthService {
+    async signup(data) {
+        data.provider = {local:true};
+        data.emailValidationUUID = uuid.v4();
+
+        const userService = new UserService();
+        const result = await userService.create(data);
+
+        if(!result.success) {
+            return {
+                success: false,
+                messages: result.messages
+            };
+        }
+        return {
+            success: true,
+            user: result.user,
+            messages: ["Completa tu registro a través del mensaje que enviamos a tu Correo Electrónico"]
+        };
+    }
+
     #createToken(payload) {
         const token = jwt.sign(payload, jwtSecret, {
             expiresIn: "7d"
@@ -27,21 +48,6 @@ class AuthService {
             user: userWithNoSensitiveData,
             token
         };
-    }
-
-    async signup(data) {
-        data.provider = {local:true};
-
-        const userService = new UserService();
-        const result = await userService.create(data);
-
-        if(!result.success) {
-            return {
-                success: false,
-                messages: result.messages
-            };
-        }
-        return this.#getUserData(result.user);
     }
 }
 
