@@ -1,4 +1,6 @@
 const nodemailer = require("nodemailer");
+const hbs = require("nodemailer-express-handlebars");
+const path = require("path");
 const {
     emailHost,
     emailPort,
@@ -17,18 +19,14 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-async function sendEmail(to, subject, text, html) {
-    const info = await transporter.sendMail({
-        from: "GustavoEdu10111213@gmail.com",
-        to,
-        subject,
-        text,
-        html
-    });
-
-    console.log(info);
-    return {success:true};
-}
+transporter.use("compile", hbs({
+    viewEngine: {
+        extname: ".hbs",
+        defaultLayout: false
+    },
+    viewPath: path.join(__dirname, "..", "views", "emails"),
+    extName: ".hbs"
+}));
 
 transporter.verify(function(error, success) {
     if(success) {
@@ -40,4 +38,4 @@ transporter.verify(function(error, success) {
     }
 });
 
-module.exports = sendEmail;
+module.exports = transporter;

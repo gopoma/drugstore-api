@@ -1,6 +1,6 @@
 const UserService = require("./users");
 const uuid = require("uuid");
-const sendEmail = require("../libs/email");
+const transporter = require("../libs/email");
 const jwt = require("jsonwebtoken");
 const {jwtSecret} = require("../config");
 
@@ -18,7 +18,16 @@ class AuthService {
                 messages: result.messages
             };
         }
-        await sendEmail(result.user.email, "Completa tu registro", "xd", `<a href='https://www.youtube.com/watch?v=ogK4n_CtVfc&t=108s'><em>Verifica</em> tu cuentita xd /auth/verify/${data.emailValidationUUID}</a>`);
+
+        transporter.sendMail({
+            from: "GustavoEdu10111213@gmail.com",
+            to: data.email,
+            subject: "[chapipharm] Completa tu registro",
+            template: "verification",
+            context: {
+                verificationURL: `http://localhost:4000/api/auth/${data.emailValidationUUID}`
+            }
+        });
         return {
             success: true,
             user: result.user,
