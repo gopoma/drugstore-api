@@ -2,7 +2,8 @@ const {Router} = require("express");
 const AuthService = require("../services/auth");
 const {
     tokenToCookie,
-    tokenToCookieAndRedirect
+    tokenToCookieAndRedirect,
+    deleteCookie
 } = require("../helpers/authResponse");
 
 function auth(app) {
@@ -24,6 +25,10 @@ function auth(app) {
     router.get("/verify/:emailVerificationUUID", async (req, res) => {
         const result = await authService.validateEmail(req.params.emailVerificationUUID);
         return tokenToCookieAndRedirect(res, result, 400);
+    });
+
+    router.post("/logout", (req, res) => {
+        return deleteCookie(res);
     });
 }
 
