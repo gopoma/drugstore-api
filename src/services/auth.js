@@ -46,11 +46,7 @@ class AuthService {
             };
         }
         const validatedUser = await userService.validateUser(emailVerificationUUID);
-        return {
-            success: true,
-            user: validatedUser,
-            messages: ["Correo Electrónico validado con éxito"]
-        };
+        return this.#getUserData(validatedUser);
     }
 
     #createToken(payload) {

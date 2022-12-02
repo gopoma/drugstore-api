@@ -1,6 +1,9 @@
 const {Router} = require("express");
 const AuthService = require("../services/auth");
-const {authResponse} = require("../helpers/authResponse");
+const {
+    tokenToCookie,
+    tokenToCookieAndRedirect
+} = require("../helpers/authResponse");
 
 function auth(app) {
     const router = Router();
@@ -15,7 +18,7 @@ function auth(app) {
 
     router.get("/verify/:emailVerificationUUID", async (req, res) => {
         const result = await authService.validateEmail(req.params.emailVerificationUUID);
-        return res.status(result.success ? 202 : 400).json(result);
+        return tokenToCookieAndRedirect(res, result, 400);
     });
 }
 
