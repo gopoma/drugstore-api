@@ -8,7 +8,12 @@ const config = {
     dbPassword: process.env.DB_PASSWORD,
     dbHost: process.env.DB_HOST,
     dbName: process.env.DB_NAME,
-    bucketName: process.env.BUCKET_NAME
+    bucketName: process.env.BUCKET_NAME,
+    emailHost: process.env.EMAIL_HOST,
+    emailPort: process.env.EMAIL_PORT,
+    emailSecure: process.env.EMAIL_SECURE === "true",
+    emailUser: process.env.EMAIL_USER,
+    emailPassword: process.env.EMAIL_PASSWORD
 };
 
 config.development = config.env === "development";
