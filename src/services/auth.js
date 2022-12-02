@@ -25,13 +25,31 @@ class AuthService {
             subject: "[chapipharm] Completa tu registro",
             template: "verification",
             context: {
-                verificationURL: `http://localhost:4000/api/auth/${data.emailValidationUUID}`
+                verificationURL: `http://localhost:4000/api/auth/verify/${data.emailValidationUUID}`
             }
         });
         return {
             success: true,
             user: result.user,
             messages: ["Completa tu registro a través del mensaje que enviamos a tu Correo Electrónico"]
+        };
+    }
+
+    async validateEmail(emailVerificationUUID) {
+        const userService = new UserService();
+        const user = await userService.getByEmailValidationUUID(emailVerificationUUID);
+
+        if(!user) {
+            return {
+                success: false,
+                messages: ["Tal vez ya se halla utilizado este código de validación. Verifica tu URL"]
+            };
+        }
+        const validatedUser = await userService.validateUser(emailVerificationUUID);
+        return {
+            success: true,
+            user: validatedUser,
+            messages: ["Correo Electrónico validado con éxito"]
         };
     }
 

@@ -12,6 +12,11 @@ function auth(app) {
         const result = await authService.signup(req.body);
         return res.status(result.success ? 201 : 400).json(result);
     });
+
+    router.get("/verify/:emailVerificationUUID", async (req, res) => {
+        const result = await authService.validateEmail(req.params.emailVerificationUUID);
+        return res.status(result.success ? 202 : 400).json(result);
+    });
 }
 
 module.exports = auth;

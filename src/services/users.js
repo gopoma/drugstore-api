@@ -40,6 +40,19 @@ class UserService {
             return dbError(error);
         }
     }
+
+    async getByEmailValidationUUID(emailValidationUUID) {
+        const user = await UserModel.findOne({emailValidationUUID});
+        return user;
+    }
+
+    async validateUser(emailValidationUUID) {
+        const user = await UserModel.findOneAndUpdate({emailValidationUUID}, {
+            emailValidationUUID: null,
+            isEmailValid: true
+        }, {new:true});
+        return user;
+    }
 }
 
 module.exports = UserService;
