@@ -1,5 +1,6 @@
 const {Router} = require("express");
 const AuthService = require("../services/auth");
+const authValidation = require("../middleware/auth");
 const passport = require("passport");
 const {
     tokenToCookie,
@@ -26,6 +27,13 @@ function auth(app) {
     router.get("/verify/:emailVerificationUUID", async (req, res) => {
         const result = await authService.validateEmail(req.params.emailVerificationUUID);
         return tokenToCookieAndRedirect(res, result, 400);
+    });
+
+    router.get("/validate", authValidation("REGULAR"), (req, res) => {
+        return res.status(200).json({
+            success: true,
+            user: req.user
+        });
     });
 
     router.post("/logout", (req, res) => {
