@@ -60,7 +60,7 @@ const userSchema = mongoose.Schema({
         twitter: String,
         github: String
     }
-});
+}, {timestamps: true});
 userSchema.plugin(uniqueValidator, {message:"{VALUE} ya ha sido registrado"});
 
 const UserModel = mongoose.model("user", userSchema);

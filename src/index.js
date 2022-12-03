@@ -12,6 +12,7 @@ doDBConnection();
 // Importando routers
 const users = require("./routes/users");
 const auth = require("./routes/auth");
+const categories = require("./routes/categories");
 
 // Importando Estrategias
 const {
@@ -47,6 +48,7 @@ app.get("/", (req, res) => {
 // Utilizando las rutas
 users(app);
 auth(app);
+categories(app);
 
 app.use((err, req, res, next) => {
     if(err.code === "LIMIT_UNEXPECTED_FILE") {
