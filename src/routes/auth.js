@@ -37,7 +37,8 @@ function auth(app) {
     }));
     router.get("/google/callback", passport.authenticate("google", {session:false}), async (req, res) => {
         const user = req.user.profile;
-        return res.json(user);
+        const result = await authService.socialLogin(user);
+        return res.json(result);
     });
 
     router.get("/facebook", passport.authenticate("facebook", {
@@ -45,7 +46,8 @@ function auth(app) {
     }));
     router.get("/facebook/callback", passport.authenticate("facebook", {session:false}), async (req, res) => {
         const user = req.user.profile;
-        return res.json(user);
+        const result = await authService.socialLogin(user);
+        return res.json(result);
     });
 }
 

@@ -86,6 +86,18 @@ class AuthService {
         return this.#getUserData(validatedUser);
     }
 
+    async socialLogin(data) {
+        const userService = new UserService();
+        const user = {
+            displayName: data.displayName,
+            email: data.emails[0].value,
+            profilePicture: data.photos[0].value,
+            provider: data.provider,
+            idProvider: data.id
+        };
+        return user;
+    }
+
     #createToken(payload) {
         const token = jwt.sign(payload, jwtSecret, {
             expiresIn: "7d"
