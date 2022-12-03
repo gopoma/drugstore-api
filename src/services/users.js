@@ -29,6 +29,9 @@ class UserService {
             if(!trusted) {
                 delete data.role;
                 delete data.idProvider;
+            } else {
+                data.provider = {local:true};
+                data.isEmailValid = true;
             }
             if(!data.displayName?.trim()) {
                 data.displayName = `${data.firstName} ${data.lastName}`;

@@ -1,5 +1,6 @@
 const {Router} = require("express");
 const UserService = require("../services/users");
+const authValidation = require("../middleware/auth");
 
 function users(app) {
     const router = Router();
@@ -7,7 +8,7 @@ function users(app) {
 
     app.use("/api/users", router);
 
-    router.post("/", async (req, res) => {
+    router.post("/", authValidation("ADMIN"), async (req, res) => {
         const result = await userService.create(req.body, true);
         return res.status(201).json(result);
     });
