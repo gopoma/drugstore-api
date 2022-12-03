@@ -4,6 +4,7 @@ const cors = require("cors");
 const cookies = require("cookie-parser");
 const {port} = require("./config");
 const {doDBConnection} = require("./libs/db");
+const passport = require("passport");
 
 const app = express();
 doDBConnection();
@@ -11,6 +12,12 @@ doDBConnection();
 // Importando routers
 const users = require("./routes/users");
 const auth = require("./routes/auth");
+
+// Importando Estrategias
+const {
+    useGoogleStrategy,
+    useFacebookStrategy
+} = require("./middleware/authProvider");
 
 // Utilizando middleware
 app.use(morgan("dev"));
@@ -20,6 +27,10 @@ app.use(cors({
     origin: ["http://localhost:4200"],
     credentials: true
 }));
+app.use(passport.initialize());
+// Utilizando Estrategias
+passport.use(useGoogleStrategy());
+passport.use(useFacebookStrategy());
 
 app.get("/", (req, res) => {
     return res.json({

@@ -35,7 +35,7 @@ const userSchema = mongoose.Schema({
     role: {
         type: String,
         enum: {
-            values: ["REGULAR", "ADMIN"],
+            values: ["REGULAR", "STOREKEEPER", "ADMIN"],
             message: "Introduzca un rol válido"
         },
         default: "REGULAR"

@@ -1,5 +1,6 @@
 const {Router} = require("express");
 const AuthService = require("../services/auth");
+const passport = require("passport");
 const {
     tokenToCookie,
     tokenToCookieAndRedirect,
@@ -29,6 +30,22 @@ function auth(app) {
 
     router.post("/logout", (req, res) => {
         return deleteCookie(res);
+    });
+
+    router.get("/google", passport.authenticate("google", {
+        scope:["email", "profile"]
+    }));
+    router.get("/google/callback", passport.authenticate("google", {session:false}), async (req, res) => {
+        const user = req.user.profile;
+        return res.json(user);
+    });
+
+    router.get("/facebook", passport.authenticate("facebook", {
+        scope:["email"]
+    }));
+    router.get("/facebook/callback", passport.authenticate("facebook", {session:false}), async (req, res) => {
+        const user = req.user.profile;
+        return res.json(user);
     });
 }
 

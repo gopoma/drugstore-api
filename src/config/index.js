@@ -13,7 +13,13 @@ const config = {
     emailPort: process.env.EMAIL_PORT,
     emailSecure: process.env.EMAIL_SECURE === "true",
     emailUser: process.env.EMAIL_USER,
-    emailPassword: process.env.EMAIL_PASSWORD
+    emailPassword: process.env.EMAIL_PASSWORD,
+    oauthClientID: process.env.OAUTH_CLIENT_ID,
+    oauthClientSecret: process.env.OAUTH_CLIENT_SECRET,
+    facebookAppID: process.env.FACEBOOK_APP_ID,
+    facebookAppSecret: process.env.FACEBOOK_APP_SECRET,
+    callbackURL: process.env.CALLBACK_URL,
+    callbackURLDev: process.env.CALLBACK_URL_DEVELOPMENT
 };
 
 config.development = config.env === "development";
