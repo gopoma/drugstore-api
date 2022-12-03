@@ -95,7 +95,16 @@ class AuthService {
             provider: data.provider,
             idProvider: data.id
         };
-        return user;
+        const result = await userService.getOrCreateByProvider(user);
+
+        if(!result.success) {
+            return {
+                success: false,
+                messages: result.messages
+            };
+        }
+
+        return this.#getUserData(result.user);
     }
 
     #createToken(payload) {

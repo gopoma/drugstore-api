@@ -20,7 +20,8 @@ const userSchema = mongoose.Schema({
         trim: true,
         required: [true, "Por favor, proporcione un correo electrónico"],
         unique: true,
-        match: [/^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/, "Correo electrónico inválido"]
+        match: [/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/, "Correo electrónico inválido"],
+        lowercase: true
     },
     password: {
         type: String,
