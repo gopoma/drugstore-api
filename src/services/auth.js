@@ -2,7 +2,12 @@ const UserService = require("./users");
 const uuid = require("uuid");
 const transporter = require("../libs/email");
 const jwt = require("jsonwebtoken");
-const {jwtSecret} = require("../config");
+const {
+    production,
+    callbackURL,
+    callbackURLDev,
+    jwtSecret
+} = require("../config");
 const {compare} = require("../libs/encryption");
 
 class AuthService {
@@ -62,7 +67,7 @@ class AuthService {
             subject: "[chapipharm] Completa tu registro",
             template: "verification",
             context: {
-                verificationURL: `http://localhost:4000/api/auth/verify/${data.emailValidationUUID}`
+                verificationURL: `${production?callbackURL:callbackURLDev}/api/auth/verify/${data.emailValidationUUID}`
             }
         });
         return {
