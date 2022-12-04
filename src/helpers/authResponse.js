@@ -24,7 +24,7 @@ function tokenToCookieAndRedirect(res, result, errCode) {
             secure: production,
             sameSite: "none",
             expires: new Date(new Date().setDate(new Date().getDate() + 7))
-        }).redirect(production ? "https://your-production-angular-url" : "https://your-development-angular-url");
+        }).redirect(production ? "http://localhost:4200" : "http://localhost:4200");
     }
 
     return res.status(errCode).json(result);
