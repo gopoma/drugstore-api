@@ -5,7 +5,7 @@ const categorySchema = new mongoose.Schema({
     name: {
         type: String,
         trim: true,
-        required: [true, "Por favor, proporcione una categoría"],
+        required: [true, "Por favor, proporcione un nombre"],
         maxlength: [120, "No mayor de 120 caracteres"],
         unique: true,
         lowercase: true

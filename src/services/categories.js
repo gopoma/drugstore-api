@@ -29,6 +29,12 @@ class CategoryService {
     async delete(id) {
         try {
             const category = await CategoryModel.findByIdAndDelete(id);
+            if(!category) {
+                return {
+                    success: false,
+                    messages: ["Categoría no Encontrada"]
+                };
+            }
             return {
                 success: true,
                 category

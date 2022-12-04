@@ -1,4 +1,5 @@
 function dbError(error) {
+    console.log(error);
     if(error.name === "CastError" && error.kind === "ObjectId") {
         return {
             success: false,
