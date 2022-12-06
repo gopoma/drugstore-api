@@ -26,7 +26,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookies());
 app.use(cors({
-    origin: ["http://localhost:4200"],
+    origin: ["http://localhost:4200", "https://chapipharm-frontend.vercel.app"],
     credentials: true
 }));
 app.use(passport.initialize());

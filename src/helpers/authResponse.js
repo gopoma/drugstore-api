@@ -24,7 +24,7 @@ function tokenToCookieAndRedirect(res, result, errCode) {
             secure: production,
             sameSite: "none",
             expires: new Date(new Date().setDate(new Date().getDate() + 7))
-        }).redirect(production ? "http://localhost:4200" : "http://localhost:4200");
+        }).redirect(production ? "https://chapipharm-frontend.vercel.app" : "http://localhost:4200");
     }
 
     return res.status(errCode).json(result);
