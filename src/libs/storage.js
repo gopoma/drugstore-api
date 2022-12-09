@@ -63,10 +63,17 @@ const getFile = (fileName, res, download) => {
             });
         });
 
+        const ext = path.extname(fileName);
+        const dotSplitted = ext.split(".");
+        const format = dotSplitted[1];
         if(download) {
             res.writeHead(200, {
-                "Content-Type": "application/octet-stream",
+                "Content-Type": `image/${format}`,
                 "Content-Disposition": `attachment; filename=${fileName}`
+            });
+        } else {
+            res.writeHead(200, {
+                "Content-Type": `image/${format}`
             });
         }
         stream.pipe(res);
