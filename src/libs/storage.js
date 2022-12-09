@@ -2,7 +2,12 @@ const {Storage} = require("@google-cloud/storage");
 const path = require("path");
 const uuid = require("uuid");
 const {Readable} = require("stream");
-const {bucketName} = require("../config");
+const {
+    bucketName,
+    production,
+    callbackURL,
+    callbackURLDev
+} = require("../config");
 
 const storage = new Storage({
     keyFilename: "credentials.json"
@@ -28,7 +33,7 @@ const uploadFile = (file) => {
                 message: "El archivo se ha subido exitosamente",
                 originalName: file.originalname,
                 fileName,
-                resourceURL: `https://storage.googleapis.com/${bucketName}/${fileName}`
+                resourceURL: `${production ? callbackURL : callbackURLDev}/api/images/${fileName}`
             });
         }).on("error", () => {
             reject({
@@ -39,6 +44,75 @@ const uploadFile = (file) => {
     });
 };
 
+const uploadFiles = async (files) => {
+    const promises = files.map(file => uploadFile(file));
+    const results = await Promise.allSettled(promises);
+
+    return results;
+};
+
+const getFile = (fileName, res, download) => {
+    const cloudFile = storage.bucket(bucketName).file(fileName);
+    const stream = cloudFile.createReadStream();
+
+    return new Promise((resolve, reject) => {
+        stream.on("error", () => {
+            reject({
+                success: false,
+                messages: ["No se ha podido descargar el archivo"]
+            });
+        });
+
+        if(download) {
+            res.writeHead(200, {
+                "Content-Type": "application/octet-stream",
+                "Content-Disposition": `attachment; filename=${fileName}`
+            });
+        }
+        stream.pipe(res);
+
+        stream.on("end", () => {
+            resolve({
+                success: true,
+                message: "Archivo descargado exitosamente"
+            });
+        });
+    });
+};
+
+const deleteFile = async (fileName) => {
+    if(!fileName?.trim()) {
+        return {
+            success: false,
+            message: "Por favor, proporcione un nombre de archivo"
+        };
+    }
+
+    const cloudFile = storage.bucket(bucketName).file(fileName);
+    try {
+        await cloudFile.delete();
+
+        return {
+            success: true,
+            message: "El archivo se ha eliminado exitosamente",
+            fileName
+        };
+    } catch(error) {
+        if(error.code === 404) {
+            return {
+                success: false,
+                message: "Archivo no Encontrado"
+            };
+        }
+        return {
+            success: false,
+            message: "No se ha podido Eliminar el Archivo"
+        };
+    }
+};
+
 module.exports = {
-    uploadFile
+    uploadFiles,
+    getFile,
+    deleteFile
 };

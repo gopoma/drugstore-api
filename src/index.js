@@ -14,6 +14,7 @@ const users = require("./routes/users");
 const auth = require("./routes/auth");
 const categories = require("./routes/categories");
 const products = require("./routes/products");
+const images = require("./routes/images");
 
 // Importando Estrategias
 const {
@@ -51,6 +52,7 @@ users(app);
 auth(app);
 categories(app);
 products(app);
+images(app);
 
 app.use((err, req, res, next) => {
     if(err.code === "LIMIT_UNEXPECTED_FILE") {
