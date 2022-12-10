@@ -13,6 +13,11 @@ function products(app) {
         return res.status(result.success ? 200 : 500).json(result);
     });
 
+    router.get("/search", async (req, res) => {
+        const result = await productService.search(req.query);
+        return res.status(result.success ? 200 : 500).json(result);
+    });
+
     router.get("/:idProduct", async (req, res) => {
         const result = await productService.get(req.params.idProduct);
         return res.status(result.success ? 200 : 404).json(result);
