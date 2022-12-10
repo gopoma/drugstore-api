@@ -1,6 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
+const helmet = require("helmet");
 const cookies = require("cookie-parser");
 const {port} = require("./config");
 const {doDBConnection} = require("./libs/db");
@@ -30,6 +31,7 @@ app.use(cors({
     origin: ["http://localhost:4200", "https://chapipharm-frontend.vercel.app"],
     credentials: true
 }));
+app.use(helmet());
 app.use(passport.initialize());
 // Utilizando Estrategias
 passport.use(useGoogleStrategy());
