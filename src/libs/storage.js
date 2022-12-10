@@ -8,6 +8,7 @@ const {
     callbackURL,
     callbackURLDev
 } = require("../config");
+const { response } = require("express");
 
 const storage = new Storage({
     keyFilename: "credentials.json"
@@ -33,7 +34,7 @@ const uploadFile = (file) => {
                 message: "El archivo se ha subido exitosamente",
                 originalName: file.originalname,
                 fileName,
-                resourceURL: `${production ? callbackURL : callbackURLDev}/api/images/${fileName}`
+                resourceURL: `https://storage.googleapis.com/${bucketName}/${fileName}`
             });
         }).on("error", () => {
             reject({
@@ -51,7 +52,7 @@ const uploadFiles = async (files) => {
     return results;
 };
 
-const getFile = (fileName, res, download) => {
+const downloadFile = (fileName, res = response) => {
     const cloudFile = storage.bucket(bucketName).file(fileName);
     const stream = cloudFile.createReadStream();
 
@@ -66,16 +67,8 @@ const getFile = (fileName, res, download) => {
         const ext = path.extname(fileName);
         const dotSplitted = ext.split(".");
         const format = dotSplitted[1];
-        if(download) {
-            res.writeHead(200, {
-                "Content-Type": `image/${format}`,
-                "Content-Disposition": `attachment; filename=${fileName}`
-            });
-        } else {
-            res.writeHead(200, {
-                "Content-Type": `image/${format}`
-            });
-        }
+        res.setHeader("Content-Disposition", `attachment; filename=${fileName}`);
+        res.setHeader("Content-Type", `image/${format}`);
         stream.pipe(res);
 
         stream.on("end", () => {
@@ -120,6 +113,6 @@ const deleteFile = async (fileName) => {
 
 module.exports = {
     uploadFiles,
-    getFile,
+    downloadFile,
     deleteFile
 };

@@ -1,6 +1,6 @@
 const ImageModel = require("../models/image");
 const {
-    getFile,
+    downloadFile,
     uploadFiles,
     deleteFile
 } = require("../libs/storage");
@@ -19,7 +19,7 @@ class ImageService {
         }
     }
 
-    async get(fileName, res, download = false) {
+    async get(fileName, res) {
         try {
             const image = await ImageModel.findOne({fileName});
             if(!image) {
@@ -29,7 +29,7 @@ class ImageService {
                 };
             }
 
-            return getFile(fileName, res, download);
+            return downloadFile(fileName, res);
         } catch(error) {
             return dbError(error);
         }

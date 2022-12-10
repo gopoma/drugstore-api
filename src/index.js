@@ -31,7 +31,9 @@ app.use(cors({
     origin: ["http://localhost:4200", "https://chapipharm-frontend.vercel.app"],
     credentials: true
 }));
-app.use(helmet());
+app.use(helmet({
+    crossOriginEmbedderPolicy: false,
+}));
 app.use(passport.initialize());
 // Utilizando Estrategias
 passport.use(useGoogleStrategy());

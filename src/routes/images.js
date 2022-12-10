@@ -14,16 +14,8 @@ function images(app) {
         return res.status(result.success ? 200 : 500).json(result);
     });
 
-    router.get("/:fileName", async (req, res) => {
-        const result = await imageService.get(req.params.fileName, res);
-        if(!result.success) {
-            return res.status(404).json(result);
-        }
-        return res.end();
-    });
-
     router.get("/:fileName/download", async (req, res) => {
-        const result = await imageService.get(req.params.fileName, res, true);
+        const result = await imageService.get(req.params.fileName, res);
         if(!result.success) {
             return res.status(404).json(result);
         }
