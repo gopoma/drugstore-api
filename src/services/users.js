@@ -1,6 +1,7 @@
 const UserModel = require("../models/user");
 const {encrypt} = require("../libs/encryption");
 const uuid = require("uuid");
+const CartService = require("./cart");
 const dbError = require("../helpers/dbError");
 
 class UserService {
@@ -41,6 +42,9 @@ class UserService {
             }
 
             const user = await UserModel.create(data);
+            const cartService = new CartService();
+            await cartService.create(user.id);
+
             return {
                 success: true,
                 user: this.#getNormalizedUser(user)
@@ -93,6 +97,8 @@ class UserService {
         };
         try {
             const user = await UserModel.create(newData);
+            const cartService = new CartService();
+            await cartService.create(user.id);
 
             return {
                 success: true,
