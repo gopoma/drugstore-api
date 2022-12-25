@@ -18,6 +18,11 @@ function cart(app) {
         const result = await cartService.addItem(req.user.id, idProduct, amount);
         return res.status(result.success ? 202 : 400).json(result);
     });
+
+    router.delete("/remove", authValidation("REGULAR"), async (req, res) => {
+        const result = await cartService.removeItem(req.user.id, req.body.idProduct);
+        return res.status(result.success ? 202 : 400).json(result);
+    });
 }
 
 module.exports = cart;

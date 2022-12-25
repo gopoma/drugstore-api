@@ -94,6 +94,24 @@ class CartService {
             return dbError(error);
         }
     }
+
+    async removeItem(idUser, idProduct) {
+        try {
+            const cart = await CartModel.findByIdAndUpdate(idUser, {
+                $pull: {
+                    items: {
+                        product: idProduct
+                    }
+                }
+            }, {new:true});
+            return {
+                success: true,
+                cart
+            };
+        } catch(error) {
+            return dbError(error);
+        }
+    }
 }
 
 module.exports = CartService;
