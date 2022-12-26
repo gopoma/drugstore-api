@@ -116,6 +116,23 @@ class CartService {
             return dbError(error);
         }
     }
+
+    async calculateCheckout(idUser) {
+        const {items} = await this.getItems(idUser);
+        const checkout = items.reduce((total, item) => total+item.price*item.amount, 0);
+
+        if(checkout > 0) {
+            return {
+                success: true,
+                checkout
+            };
+        } else {
+            return {
+                success: false,
+                messages: ["Tu cuente debe ser mayor a 0"]
+            };
+        }
+    }
 }
 
 module.exports = CartService;

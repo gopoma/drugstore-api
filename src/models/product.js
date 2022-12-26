@@ -21,7 +21,7 @@ const productSchema = new mongoose.Schema({
     price: {
         type: Number,
         required: [true, "Por favor, proporcione un precio"],
-        min: [0, "El campo de precio tiene que ser positivo o cero"]
+        min: [170, "El campo de precio tiene que ser al menos S/.1.70 o 170 céntimos de sol"]
     },
     description: {
         type: String,

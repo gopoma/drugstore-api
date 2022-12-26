@@ -17,6 +17,7 @@ const categories = require("./routes/categories");
 const products = require("./routes/products");
 const images = require("./routes/images");
 const cart = require("./routes/cart");
+const payments = require("./routes/payments");
 
 // Importando Estrategias
 const {
@@ -59,6 +60,7 @@ categories(app);
 products(app);
 images(app);
 cart(app);
+payments(app);
 
 app.use((err, req, res, next) => {
     if(err.code === "LIMIT_UNEXPECTED_FILE") {
