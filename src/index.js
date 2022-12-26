@@ -18,6 +18,7 @@ const products = require("./routes/products");
 const images = require("./routes/images");
 const cart = require("./routes/cart");
 const payments = require("./routes/payments");
+const webhooks = require("./routes/webhooks");
 
 // Importando Estrategias
 const {
@@ -27,10 +28,11 @@ const {
 
 // Utilizando middleware
 app.use(morgan("dev"));
+app.use("/api/webhooks/stripe", express.raw({type:"application/json"}));
 app.use(express.json());
 app.use(cookies());
 app.use(cors({
-    origin: ["http://localhost:4200", "https://chapipharm-frontend.vercel.app"],
+    origin: ["http://127.0.0.1:5500", "http://localhost:4200", "http://localhost:4200", "https://chapipharm-frontend.vercel.app"],
     credentials: true
 }));
 app.use(helmet({
@@ -61,6 +63,7 @@ products(app);
 images(app);
 cart(app);
 payments(app);
+webhooks(app);
 
 app.use((err, req, res, next) => {
     if(err.code === "LIMIT_UNEXPECTED_FILE") {
