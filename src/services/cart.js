@@ -1,6 +1,7 @@
 const dbError = require("../helpers/dbError");
 const CartModel = require("../models/cart");
 const ProductService = require("./products");
+const UserModel = require("../models/user");
 
 class CartService {
     async create(idUser) {
@@ -132,6 +133,15 @@ class CartService {
                 messages: ["Tu cuente debe ser mayor a 0"]
             };
         }
+    }
+
+    // TODO: Complete with OrderService
+    async resolveStripeClearout(stripeCustomerID) {
+        const user = await UserModel.findOne({stripeCustomerID});
+
+        await CartModel.findByIdAndUpdate(user.id, {
+            items:[]
+        }, {new:true});
     }
 }
 

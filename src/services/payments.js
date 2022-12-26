@@ -1,5 +1,8 @@
 const CartService = require("./cart");
-const {stripeSecretKey} = require("../config");
+const {
+    stripeSecretKey,
+    endpointSecret
+} = require("../config");
 const stripe = require("stripe")(stripeSecretKey);
 
 class PaymentsService {
@@ -28,21 +31,29 @@ class PaymentsService {
     async confirmStripe(data, signature) {
         let event;
         try {
-            const endpointSecret = "whsec_9aa4651d39d59cdbcec5f2e4ac67fda35e6131a6908b86da5863130916f0514a";
             event = stripe.webhooks.constructEvent(data, signature, endpointSecret);
         } catch(error) {
-            console.log(error.message);
             return {
                 success: false,
                 message: `Webhook Error: ${error.message}`
             };
         }
 
-        if(event.type === "payment_intent.succeeded") {
-            const paymentIntent = event.data.object;
-            console.log(paymentIntent);
-        } else {
-            console.log(`Unhandled event type ${event.type}`);
+        switch(event.type) {
+            case "payment_intent.succeeded": {
+                const paymentIntent = event.data.object;
+                const stripeCustomerID = paymentIntent.customer;
+
+                if(!stripeCustomerID) {
+                    break;
+                }
+                const cartService = new CartService();
+                await cartService.resolveStripeClearout(stripeCustomerID);
+                break;
+            }
+            default: {
+                console.log(`Unhandled event type ${event.type}`);
+            }
         }
 
         return {
