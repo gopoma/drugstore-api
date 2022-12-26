@@ -126,6 +126,7 @@ class AuthService {
             email: user.email,
             role: user.role,
             profilePicture: user.profilePicture,
+            stripeCustomerID: user.stripeCustomerID,
             provider: user.provider,
             idProvider: user.idProvider,
         };

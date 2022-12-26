@@ -47,6 +47,7 @@ const userSchema = mongoose.Schema({
         default: false
     },
     emailValidationUUID: String,
+    stripeCustomerID: String,
     provider: {
         local: Boolean,
         facebook: Boolean,

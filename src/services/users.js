@@ -1,6 +1,8 @@
 const UserModel = require("../models/user");
 const {encrypt} = require("../libs/encryption");
 const uuid = require("uuid");
+const {stripeSecretKey} = require("../config");
+const stripe = require("stripe")(stripeSecretKey);
 const CartService = require("./cart");
 const dbError = require("../helpers/dbError");
 
@@ -19,7 +21,8 @@ class UserService {
             email: user.email,
             location: user.location,
             role: user.role,
-            profilePicture: user.profilePicture
+            profilePicture: user.profilePicture,
+            stripeCustomerID: user.stripeCustomerID
         };
 
         return normalizedUser;
@@ -42,6 +45,12 @@ class UserService {
             }
 
             const user = await UserModel.create(data);
+            const {id:stripeCustomerID} = await stripe.customers.create({
+                name: user.displayName,
+                email: user.email
+            });
+            user.stripeCustomerID = stripeCustomerID;
+            await user.save();
             const cartService = new CartService();
             await cartService.create(user.id);
 
@@ -97,6 +106,12 @@ class UserService {
         };
         try {
             const user = await UserModel.create(newData);
+            const {id:stripeCustomerID} = await stripe.customers.create({
+                name: user.displayName,
+                email: user.email
+            });
+            user.stripeCustomerID = stripeCustomerID;
+            await user.save();
             const cartService = new CartService();
             await cartService.create(user.id);
 
