@@ -14,7 +14,11 @@ class CartService {
 
     async getItems(idUser) {
         try {
-            const items = await CartModel.findById(idUser).populate("items.product", "name laboratory price images");
+            const cart = await CartModel.findById(idUser).populate("items.product", "name laboratory price images");
+            const items = cart.items.map(composed => ({
+                ...composed.product?._doc,
+                amount: composed.amount
+            }));
             return {
                 success: true,
                 items
@@ -57,7 +61,7 @@ class CartService {
             const alreadyInCart = Boolean(cartWithProductAlready);
 
             if(!alreadyInCart) {
-                const cart = await CartModel.findByIdAndUpdate(idUser, {
+                await CartModel.findByIdAndUpdate(idUser, {
                     $push: {
                         items: {
                             product: idProduct,
@@ -67,7 +71,7 @@ class CartService {
                 }, {new:true}).populate("items.product", "name laboratory price images");
                 return {
                     success: true,
-                    cart
+                    message: "Producto agregado al Carrito Exitosamente"
                 };
             } else {
                 const productAlreadyIn = cartWithProductAlready.items.find((item) => String(item.product) === idProduct);
@@ -84,10 +88,10 @@ class CartService {
                         "items.product": idProduct
                     },
                     {$inc: {"items.$.amount": amount}}, {new:true}).populate("items.product", "name laboratory price images");
-                const cart = await CartModel.findById(idUser).populate("items.product", "name laboratory price images");
+                await CartModel.findById(idUser).populate("items.product", "name laboratory price images");
                 return {
                     success: true,
-                    cart
+                    message: "Producto agregado al Carrito Exitosamente"
                 };
             }
         } catch(error) {
@@ -97,7 +101,7 @@ class CartService {
 
     async removeItem(idUser, idProduct) {
         try {
-            const cart = await CartModel.findByIdAndUpdate(idUser, {
+            await CartModel.findByIdAndUpdate(idUser, {
                 $pull: {
                     items: {
                         product: idProduct
@@ -106,7 +110,7 @@ class CartService {
             }, {new:true});
             return {
                 success: true,
-                cart
+                message: "Producto removido del Carrito Exitosamente"
             };
         } catch(error) {
             return dbError(error);
