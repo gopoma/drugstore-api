@@ -4,7 +4,14 @@ const dbError = require("../helpers/dbError");
 class OrderService {
     async get(idUser) {
         try {
-            const orders = await OrderModel.find({user:idUser}).populate("items.product", "name laboratory price images") ?? [];
+            const results = await OrderModel.find({user:idUser}).populate("items.product", "name laboratory price images") ?? [];
+            const orders = results.map(result => ({
+                items: result.items.map(item => ({
+                    ...item.product._doc,
+                    amount: item.amount
+                })),
+                completed: result.completed
+            }));
             return {
                 success: true,
                 orders

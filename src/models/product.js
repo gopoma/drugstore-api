@@ -21,7 +21,11 @@ const productSchema = new mongoose.Schema({
     price: {
         type: Number,
         required: [true, "Por favor, proporcione un precio"],
-        min: [170, "El campo de precio tiene que ser al menos S/.1.70 o 170 céntimos de sol"]
+        min: [170, "El campo de precio tiene que ser al menos S/.1.70 o 170 céntimos de sol"],
+        validate: {
+            validator: Number.isInteger,
+            message: "El campo de precio tiene que ser entero"
+        }
     },
     description: {
         type: String,

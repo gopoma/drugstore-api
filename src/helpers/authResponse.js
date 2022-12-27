@@ -6,7 +6,7 @@ function tokenToCookie(res, result, errCode) {
 
         return res.cookie("token", token, {
             httpOnly: true,
-            secure: true, // TODO: must be production
+            secure: production,
             sameSite: "none",
             expires: new Date(new Date().setDate(new Date().getDate()+7))
         }).json(data);
@@ -21,7 +21,7 @@ function tokenToCookieAndRedirect(res, result, errCode) {
 
         return res.cookie("token", token, {
             httpOnly: true,
-            secure: true, // TODO: must be production
+            secure: production,
             sameSite: "none",
             expires: new Date(new Date().setDate(new Date().getDate() + 7))
         }).redirect(production ? "https://chapipharm-frontend.vercel.app" : "http://localhost:4200");
@@ -33,7 +33,7 @@ function tokenToCookieAndRedirect(res, result, errCode) {
 function deleteCookie(res) {
     return res.cookie("token", "", {
         httpOnly: true,
-        secure: true, // TODO: must be production
+        secure: production,
         sameSite: "none",
         expires: new Date()
     }).json({

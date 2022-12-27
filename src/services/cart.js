@@ -123,7 +123,14 @@ class CartService {
         const {items} = await this.getItems(idUser);
         const checkout = items.reduce((total, item) => total+item.price*item.amount, 0);
 
-        if(checkout > 0) {
+        if(!Number.isInteger(checkout)) {
+            return {
+                success: false,
+                messages: ["Tu cuenta debe ser un valor entero"]
+            };
+        }
+
+        if(checkout > 200) {
             return {
                 success: true,
                 checkout
@@ -131,7 +138,7 @@ class CartService {
         } else {
             return {
                 success: false,
-                messages: ["Tu cuente debe ser mayor a 0"]
+                messages: ["Tu cuente debe ser al menos S/. 2.00"]
             };
         }
     }
