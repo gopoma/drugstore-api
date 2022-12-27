@@ -2,6 +2,7 @@ const dbError = require("../helpers/dbError");
 const CartModel = require("../models/cart");
 const ProductService = require("./products");
 const UserModel = require("../models/user");
+const OrderService = require("./orders");
 
 class CartService {
     async create(idUser) {
@@ -135,13 +136,57 @@ class CartService {
         }
     }
 
-    // TODO: Complete with OrderService
-    async resolveStripeClearout(stripeCustomerID) {
-        const user = await UserModel.findOne({stripeCustomerID});
+    async destock(idUser) {
+        try {
+            const {items} = await this.getItems(idUser);
+            const productService = new ProductService();
+            const promises = items.map(async (item) => {
+                const {product} = await productService.get(item._id);
+                const leftover = product.stock - item.amount;
+                if(leftover >= 0) {
+                    await productService.edit(item._id, {stock:leftover});
+                    return {
+                        success: true,
+                        message: "Cantidad Removida del Stock Exitosamente"
+                    };
+                } else {
+                    // TODO: Refund on SyncError
+                    return {
+                        success: false,
+                        message: "Error de Sincronización en el Producto, Reembolso Programado sobre el Producto"
+                    };
+                }
+            });
+            const results = (await Promise.allSettled(promises)).map(result => result.value);
+            return results;
+        } catch(error) {
+            return dbError(error);
+        }
+    }
 
-        await CartModel.findByIdAndUpdate(user.id, {
-            items:[]
-        }, {new:true});
+    async clearout(idUser) {
+        await CartModel.findByIdAndUpdate(idUser, {
+            items: []
+        });
+    }
+
+    async resolveStripeClearout(stripeCustomerID) {
+        try {
+            const user = await UserModel.findOne({stripeCustomerID});
+            const cart = await CartModel.findById(user.id);
+
+            await this.destock(user.id);
+            const orderService = new OrderService();
+            const order = await orderService.create(user.id, cart.items);
+            await this.clearout(user.id);
+
+            return {
+                success: true,
+                order
+            };
+        } catch(error) {
+            return dbError(error);
+        }
     }
 }
 

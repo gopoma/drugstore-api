@@ -48,8 +48,8 @@ class PaymentsService {
                     break;
                 }
                 const cartService = new CartService();
-                await cartService.resolveStripeClearout(stripeCustomerID);
-                break;
+                const result = await cartService.resolveStripeClearout(stripeCustomerID);
+                return result;
             }
             default: {
                 console.log(`Unhandled event type ${event.type}`);
