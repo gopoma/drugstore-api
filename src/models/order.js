@@ -18,7 +18,7 @@ const orderSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     }
-});
+}, {timestamps:true});
 
 const OrderSchema = mongoose.model("order", orderSchema);
 
